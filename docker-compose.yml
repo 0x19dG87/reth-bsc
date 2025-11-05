@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  reth-bsc:
+    build: .
+    image: reth-bsc:latest
+    container_name: reth-bsc
+    restart: unless-stopped
+    ports:
+      - "8545:8545"  # HTTP RPC
+      - "8546:8546"  # WebSocket RPC
+      - "6060:6060"  # Metrics
+      - "30303:30303/tcp"  # P2P port
+      - "30303:30303/udp"  # P2P discovery
+    volumes:
+      - ./data_dir:/root/.reth
+      - ./logs:/root/logs
+    command:
+      - node
+      - '--chain=bsc'
+      - '--datadir=/root/.reth'
+      - '--full'
+      - '--port=30303'
+      - '--http'
+      - '--http.addr=0.0.0.0'
+      - '--http.port=8545'
+      - '--http.api=eth,net,web3,txpool,debug'
+      - '--ws'
+      - '--ws.addr=0.0.0.0'
+      - '--ws.port=8546'
+      - '--ws.api=eth,net,web3,txpool'
+      - '--metrics=0.0.0.0:6060'
+      - '--log.file.verbosity=debug'
+      - '--log.file.directory=/root/logs'
