@@ -3,6 +3,12 @@ FROM rust:latest as builder
 
 WORKDIR /build
 
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    clang \
+    libclang-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY . .
 
 RUN make maxperf
